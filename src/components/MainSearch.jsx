@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Job from "./Job";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const MainSearch = () => {
   const [query, setQuery] = useState("");
   const [jobs, setJobs] = useState([]);
+  const company = useSelector((state) => state.favorite.company);
+  const navigate = useNavigate();
 
   const baseEndpoint = "https://strive-benchmark.herokuapp.com/api/jobs?search=";
 
@@ -18,7 +22,7 @@ const MainSearch = () => {
     try {
       const response = await fetch(baseEndpoint + query + "&limit=20");
       if (response.ok) {
-        const { data } = await response.json();
+        const { data } = await response.json(); 
         setJobs(data);
       } else {
         alert("Error fetching results");
@@ -33,7 +37,7 @@ const MainSearch = () => {
       <Row>
         <Col xs={10} className="mx-auto my-3 d-flex justify-content-between align-items-center">
           <h1 className="display-1">Remote Jobs Search</h1>
-          <Button className="h-50"><i className="bi bi-star-fill"></i> Ciao</Button>
+          <Button className="h-50" onClick={() => {navigate('/favorites')}}><i className="bi bi-star-fill"></i> {company.length}</Button>
         </Col>
         <Col xs={10} className="mx-auto">
           <Form onSubmit={handleSubmit}>
@@ -41,7 +45,7 @@ const MainSearch = () => {
           </Form>
         </Col>
         <Col xs={10} className="mx-auto mb-5">
-          {jobs.map(jobData => (
+          {jobs && jobs.map(jobData => (
             <Job key={jobData._id} data={jobData} />
           ))}
         </Col>

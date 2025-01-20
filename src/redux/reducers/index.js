@@ -1,16 +1,33 @@
 const initialState = {
-    company: {
-        companyName: []
-    }
-}
+  favorite: {
+    company: [],
+  },
+};
 
 const mainReducer = (state = initialState, action) => {
-    switch (action.type) {
-        
-    
-        default:
-            return state;
-    }
-}
+  switch (action.type) {
+    case "ADD_TO_FAVORITE":
+      return {
+        ...state,
+        favorite: {
+          company: state.favorite.company.concat(action.payload),
+        },
+      };
 
-export default mainReducer
+    case "REMOVE_FROM_FAVORITE":
+      return {
+        ...state,
+        favorite: {
+          ...state.favorite,
+          company: state.favorite.company.filter((company, i) => {
+            return action.payload !== i;
+          }),
+        },
+      };
+
+    default:
+      return state;
+  }
+};
+
+export default mainReducer;
